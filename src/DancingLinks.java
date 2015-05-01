@@ -8,11 +8,13 @@ public class DancingLinks {
     public ArrayList<ArrayList<String>> solutionSets;
     public HashMap<Integer, String> solutionSet;
     public SparseMatrix matrix;
+    public boolean stop;
 
     public DancingLinks(SparseMatrix sm) {
         this.solutionSets = new ArrayList<ArrayList<String>>();
         this.solutionSet = new HashMap<Integer, String>();
         this.matrix = sm;
+        this.stop = false;
     }
 
     public void cover(Head col) {
