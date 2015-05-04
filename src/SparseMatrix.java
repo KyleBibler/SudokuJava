@@ -5,21 +5,7 @@ public class SparseMatrix {
 
     public Head head;
     public SparseMatrix() {
-        this.head = new Head(0);
-    }
-
-    public Head chooseCol() {
-        Head col = (Head) this.head.right;
-        int minSize = col.size+1;
-        Head minCol = null;
-        while(col != this.head) {
-            if(col.size < minSize) {
-                minCol = col;
-                minSize = col.size;
-            }
-            col = (Head) col.right;
-        }
-        return minCol;
+        this.head = new Head(null);
     }
 
     public void createLinks(HashMap<String, ArrayList<String>> matrix) {
@@ -32,7 +18,7 @@ public class SparseMatrix {
         }
 
         for(int i = 0; i < rowLength; i++) {
-            newHead = new Head(i+1);
+            newHead = new Head(null);
             headItr.right = newHead;
             newHead.left = headItr;
             headItr = newHead;
@@ -47,12 +33,12 @@ public class SparseMatrix {
         Node firstRowNode = null;
         Node nodeItr = null;
         int nodesInRow = 0;
-        ArrayList<String> currentRow = null;
+        ArrayList<String> currentRow;
         for(String key : matrix.keySet()) {
             currentRow = matrix.get(key);
             for(int j = 0; j < currentRow.size(); j++) {
                 if(!currentRow.get(j).equals("")) {
-                    newNode = new RowNode(key, (Head) headItr);
+                    newNode = new Node((Head) headItr, key);
                     if(j >= colNodes.size()) {
                         for(int n = colNodes.size(); n <= j; n++) {
                             colNodes.add(new ArrayList<Node>());
@@ -79,8 +65,8 @@ public class SparseMatrix {
         }
 
         Head colHead = this.head;
-        Node nextNode = null;
-        ArrayList<Node> current = null;
+        Node nextNode;
+        ArrayList<Node> current;
         for(int i = 0; i < colNodes.size(); i++) {
             colHead = (Head) colHead.right;
             nodeItr = colHead;

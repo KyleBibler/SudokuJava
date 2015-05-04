@@ -97,13 +97,13 @@ public class MatrixGenerator {
             column = Integer.parseInt(s.substring(s.indexOf('C')+1, s.indexOf('#')).trim());
             number = s.substring(s.indexOf('#')+1).trim();
             result += number;
-            if(column == 9) {
+            if(column == dim*dim) {
                 result += "\n";
-                if(row == 3 || row == 6) {
+                if(row % dim == 0) {
                     result += "\n";
                 }
             }
-            else if(column % 3 == 0) {
+            else if(column % dim == 0) {
                 result += "   ";
             } else {
                 result += " ";
