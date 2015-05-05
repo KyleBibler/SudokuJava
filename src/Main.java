@@ -21,6 +21,9 @@ public class Main {
             System.out.println(mg.buildFinished(set));
         }
 
+//        Generator g = new Generator(5);
+//        System.out.println(g.toString());
+
 
 
 

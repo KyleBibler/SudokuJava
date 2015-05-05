@@ -33,6 +33,12 @@ import java.util.HashMap;
 
 class FastMain
 {
+    public static int N;
+    public static int PUZZLE_SIDE;
+    public static int SQUARE_SIDE;
+    public static int PUZZLE_SIZE;
+    public static int COLUMN_SIZE;
+    public static int COUNT_LIMIT;
     public static HashMap<String, Double> timer;
     public static void main(String args[])
     {
@@ -101,6 +107,17 @@ class FastMain
                         {0,0,8,5,0,0,0,1,0},
                         {0,9,0,0,0,0,4,0,0}};
 
+
+
+        N = (int) Math.sqrt(hardPuzzle.length);
+        PUZZLE_SIDE = N*N;
+        SQUARE_SIDE = N;
+        PUZZLE_SIZE = N*N*N*N;
+        COLUMN_SIZE = 4*N*N*N*N;
+        COUNT_LIMIT = 5;
+
+        int[][] emptyPuzzle = new int[PUZZLE_SIDE][PUZZLE_SIDE];
+
         // Solve them.
 
         long startTime = System.currentTimeMillis();
@@ -111,9 +128,9 @@ class FastMain
         System.out.println("COVER TIME: " + timer.get("cover"));
         System.out.println("UNCOVER TIME: " + timer.get("uncover"));
         System.out.println("TOTAL TIME: " + timer.get("total"));
-        //fastMain.solve(puzzle2);
-        //fastMain.solve(puzzle3);
-        //fastMain.solve(puzzle4);
+//        fastMain.solve(puzzle2);
+//        fastMain.solve(puzzle3);
+//        fastMain.solve(puzzle4);
     }
 
     // Solve a puzzle.
@@ -133,27 +150,29 @@ class FastMain
 
     void report(int[][] solution)
     {
+        String result = "";
         for (int r = 0; r < PUZZLE_SIDE; r++)
         {
-            for (int c = 0; c < PUZZLE_SIDE; c++)
-                System.out.print(solution[r][c] + " ");
-
-            System.out.println();
+            for (int c = 0; c < PUZZLE_SIDE; c++) {
+                result += solution[r][c];
+                if((c+1) % N == 0) {
+                    result += "\t\t";
+                } else {
+                    if(solution[r][c] < 10) {
+                        result += " ";
+                    }
+                    result += " ";
+                }
+            }
+            result += "\n";
+            if((r+1) % N == 0) {
+                result += "\n";
+            }
         }
 
+        System.out.println(result);
         System.out.println("-----------------");
     }
-
-///////////////////////////////////////////////////////////////////////////////
-//
-//  Define constants for the dimensions of the puzzle.
-//
-///////////////////////////////////////////////////////////////////////////////
-
-    static final int PUZZLE_SIDE = 9;
-    static final int SQUARE_SIDE = 3;
-    static final int PUZZLE_SIZE = 81;
-    static final int COLUMN_SIZE = 324;
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -165,7 +184,7 @@ class FastMain
     class DancingLinks
     {
         FastMain sudoku;
-        boolean stop;
+        int stopCount;
         int[] stats;
         int index;
         Column h;
@@ -179,7 +198,7 @@ class FastMain
         DancingLinks(int[][] p)
         {
             // Column row head.
-
+            stopCount = 0;
             h = new Column(null, 0);
             Column[] m = new Column[COLUMN_SIZE];
 
@@ -273,7 +292,7 @@ class FastMain
 
             // Report stats.
 
-            sudoku.report(s);
+            //sudoku.report(s);
         }
 
         // Start the search process.
@@ -292,8 +311,8 @@ class FastMain
         {
             // If a result has already been found, return.
 
-//            if (stop)
-//                return;
+            if (stopCount == COUNT_LIMIT)
+                return;
 
             // If there are no more columns, report the result.
 
@@ -309,7 +328,7 @@ class FastMain
                 // Report the result and set the stop flag.
 
                 report(a);
-                stop = true;
+                stopCount++;
             }
 
             // Else find the shortest column and cover it.
@@ -342,8 +361,8 @@ class FastMain
                 {
                     // Skip this if a result has been found.
 
-//                    if (stop)
-//                        break;
+                    if (stopCount == COUNT_LIMIT)
+                        break;
 
                     // Save the row in the output array.
 
