@@ -183,4 +183,79 @@ public class SamuraiGenerator {
     public void createMatrix(int[][] puzzle) {
 
     }
+
+    public String boardToString(int[][] finishedCells) {
+        String result = "";
+        //int n = (int) Math.sqrt(finishedCells.length);
+        int n = SQUARE_SIDE;
+        int side = SUDOKU_SIDE;
+
+        for(int row = 0; row < finishedCells.length; row++) {
+            for(int col = 0; col < finishedCells.length; col++) {
+                boolean topBottom = ((row >= side && row < finishedCells.length - side) && (col < side-n || col >= side+2*n));//top and bottom
+                boolean leftRight = ((row < side-n || row >= side+2*n) && (col >= side && col < finishedCells.length - side));    //left
+                boolean inPuzzle = !(topBottom || leftRight);
+                //bottom
+
+                if (inPuzzle) {
+                    String num;
+                    if(finishedCells[row][col] >= alphabet.length)
+                        num = "" + finishedCells[row][col];
+                    else { num = alphabet[finishedCells[row][col]]; }
+                    result += num;
+
+                } else {
+                    result += ' ';
+                }
+                if(col+1 == finishedCells.length) {
+                    result +="\n";
+                } else if((col + 1) % n == 0) {
+                    result += " \t";
+                } else {
+                    result += " ";
+                }
+
+            }
+            if((row+1) % n == 0) {
+                result += "\n";
+            }
+        }
+        return result;
+    }
+
+    public static void main(String[] args) {
+        int[][] puzzle1 =
+                {{0,0,0,0,0,5,0,0,0, 0,0,0, 0,0,0,0,2,0,6,0,0},
+                        {0,0,7,3,0,0,9,0,0, 0,0,0, 0,0,0,0,0,3,0,0,5},
+                        {0,5,0,0,9,0,0,6,3, 0,0,0, 0,0,8,0,0,0,0,4,0},
+
+                        {0,8,0,0,7,3,0,0,0, 0,0,0, 0,4,0,3,0,0,8,0,0},
+                        {0,0,6,2,0,0,8,0,0, 0,0,0, 7,0,0,0,9,0,5,0,0},
+                        {4,0,0,5,0,0,0,9,0, 0,0,0, 0,0,0,0,5,0,0,7,0},
+
+                        {0,3,0,0,5,0, 0,0,0,7,0,0,0,0,0, 0,0,1,0,0,0},
+                        {0,0,8,0,0,9, 0,3,0,0,4,9,6,8,0, 4,0,0,2,0,0},
+                        {0,0,9,0,0,0, 0,0,2,0,0,0,0,0,5, 0,0,0,0,8,0},
+
+                        {0,0,0,0,0,0, 9,0,0,6,0,0,0,5,0, 0,0,0,0,0,0},
+                        {0,0,0,0,0,0, 0,6,0,0,0,0,2,0,0, 0,0,0,0,0,0},
+                        {0,0,0,0,0,0, 0,5,0,0,0,0,7,0,0, 0,0,0,0,0,0},
+
+                        {0,0,0,0,3,0, 0,4,0,0,1,5,8,0,0, 0,0,6,0,0,0},
+                        {0,0,0,9,0,0, 0,2,0,3,0,0,0,9,0, 0,0,4,0,0,6},
+                        {0,0,2,0,0,0, 0,0,1,0,0,0,0,0,0, 0,0,8,0,2,0},
+
+                        {0,0,0,3,0,0,0,5,0, 0,0,0, 0,0,0,0,4,0,3,0,0},
+                        {7,0,0,0,1,9,0,0,0, 0,0,0, 0,0,0,5,0,0,7,0,0},
+                        {0,6,0,0,0,0,2,0,0, 0,0,0, 3,5,6,0,0,0,0,8,0},
+
+                        {3,0,0,2,9,0,0,7,0, 0,0,0, 0,0,0,2,6,0,0,0,1},
+                        {0,0,5,0,0,4,0,0,8, 0,0,0, 0,0,3,0,0,5,0,0,0},
+                        {0,8,0,0,0,0,0,0,0, 0,0,0, 0,7,0,0,0,0,9,0,0}};
+
+        SamuraiGenerator sg = new SamuraiGenerator();
+
+        String result = sg.boardToString(puzzle1);
+        System.out.println(result);
+    }
 }
