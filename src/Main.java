@@ -8,12 +8,13 @@ import java.util.HashMap;
 public class Main {
 
     public static void main(String[] args) {
-        File f = new File("sudoku.txt");
+        File f = new File("samurai.txt");
 
-        MatrixGenerator mg = new MatrixGenerator();
+        //MatrixGenerator mg = new MatrixGenerator();
         //mg.createFromFile(f);
+        SamuraiGenerator mg = new SamuraiGenerator();
         long startTime = System.currentTimeMillis();
-        mg.createNew(3, 2);
+        mg.createFromFile(f);
         long endTime = System.currentTimeMillis();
         System.out.println("That took " + (endTime - startTime) + " milliseconds");
 
