@@ -52,6 +52,7 @@ public class GUI extends javax.swing.JFrame {
         easy = new javax.swing.JRadioButton();
         medium = new javax.swing.JRadioButton();
         hard = new javax.swing.JRadioButton();
+        n6 = new javax.swing.JRadioButton();
         jPanel4 = new javax.swing.JPanel();
         Classic = new javax.swing.JRadioButton();
         Samurai = new javax.swing.JRadioButton();
@@ -141,35 +142,42 @@ public class GUI extends javax.swing.JFrame {
         buttonGroup3.add(hard);
         hard.setText("Hard");
 
+        n6.setText("36 x 36");
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
                 jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addGap(41, 41, 41)
+                                .addComponent(generatePuzzle)
+                                .addContainerGap())
+                        .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addContainerGap()
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addGroup(jPanel3Layout.createSequentialGroup()
-                                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                        .addComponent(n3)
-                                                        .addComponent(n5)
-                                                        .addComponent(n4)
-                                                        .addComponent(Size))
-                                                .addGap(0, 0, Short.MAX_VALUE))
+                                                .addComponent(n6)
+                                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                         .addGroup(jPanel3Layout.createSequentialGroup()
-                                                .addComponent(n2)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                                .addGap(18, 18, 18)
-                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(medium)
-                                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                                .addComponent(easy)
-                                                .addComponent(Diff))
-                                        .addComponent(hard))
-                                .addGap(66, 66, 66))
-                        .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addGap(41, 41, 41)
-                                .addComponent(generatePuzzle)
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .addGroup(jPanel3Layout.createSequentialGroup()
+                                                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                                        .addComponent(n3)
+                                                                        .addComponent(n5)
+                                                                        .addComponent(n4)
+                                                                        .addComponent(Size))
+                                                                .addGap(0, 0, Short.MAX_VALUE))
+                                                        .addGroup(jPanel3Layout.createSequentialGroup()
+                                                                .addComponent(n2)
+                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                                .addGap(18, 18, 18)
+                                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .addComponent(medium)
+                                                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                                                .addComponent(easy)
+                                                                .addComponent(Diff))
+                                                        .addComponent(hard))
+                                                .addGap(66, 66, 66))))
         );
         jPanel3Layout.setVerticalGroup(
                 jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -192,9 +200,11 @@ public class GUI extends javax.swing.JFrame {
                                         .addComponent(hard))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(n5)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(n6)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(generatePuzzle)
-                                .addContainerGap(21, Short.MAX_VALUE))
+                                .addContainerGap())
         );
 
         jPanel4.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -212,8 +222,8 @@ public class GUI extends javax.swing.JFrame {
                         .addGroup(jPanel4Layout.createSequentialGroup()
                                 .addContainerGap()
                                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(Classic)
-                                        .addComponent(Samurai))
+                                        .addComponent(Samurai)
+                                        .addComponent(Classic))
                                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
@@ -255,18 +265,18 @@ public class GUI extends javax.swing.JFrame {
                         .addGroup(JPanelLayout.createSequentialGroup()
                                 .addGap(20, 20, 20)
                                 .addGroup(JPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(gen_label)
-                                        .addComponent(Options))
+                                        .addComponent(Options)
+                                        .addComponent(gen_label))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(JPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addGroup(JPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addGroup(JPanelLayout.createSequentialGroup()
                                                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addGap(23, 23, 23)
                                                 .addComponent(import_label)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addContainerGap(20, Short.MAX_VALUE))
+                                        .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGap(20, 20, 20))
         );
 
         textArea1.setColumns(20);
@@ -285,7 +295,7 @@ public class GUI extends javax.swing.JFrame {
                 jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 242, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE))
+                                .addGap(0, 43, Short.MAX_VALUE))
         );
 
         Exit.setText("Exit");
@@ -337,7 +347,7 @@ public class GUI extends javax.swing.JFrame {
         // TODO add your handling code here:
         int returnVal = fileChooser.showOpenDialog(this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
-            file = fileChooser.getSelectedFile();
+            File file = fileChooser.getSelectedFile();
             try {
                 // What to do with the file, e.g. display it in a TextArea
                 textArea1.read( new FileReader( file.getAbsolutePath() ), null );
@@ -376,6 +386,7 @@ public class GUI extends javax.swing.JFrame {
         }
 
         if(type > 0 && isImport == true){
+            // KYLE
             MatrixGenerator mg = new MatrixGenerator();
             String finalBoard = mg.createFromFile(file);
             textArea2.setText(finalBoard);
@@ -399,6 +410,9 @@ public class GUI extends javax.swing.JFrame {
         }
         else if(n5.isSelected()){
             n = 5;
+        }
+        else if(n6.isSelected()){
+            n = 6;
         }
 
         // selecting difficulty
@@ -488,10 +502,12 @@ public class GUI extends javax.swing.JFrame {
     private javax.swing.JRadioButton n3;
     private javax.swing.JRadioButton n4;
     private javax.swing.JRadioButton n5;
+    private javax.swing.JRadioButton n6;
     private javax.swing.JButton solvePuzzle;
     private javax.swing.JTextArea textArea1;
     private javax.swing.JTextArea textArea2;
     // End of variables declaration
     private boolean isImport = false;
     private File file;
+
 }
