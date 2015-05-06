@@ -415,6 +415,10 @@ public class GUI extends javax.swing.JFrame {
         // check for checks
         if(d > -1 && n > 0){
             // KYLE DO YOUR JOB
+            MatrixGenerator mg = new MatrixGenerator();
+            Tuple<String, String> boards = mg.createNew(n, d);
+            textArea1.setText(boards.x);
+            textArea2.setText(boards.y);
         }
         else{
             JOptionPane.showMessageDialog(rootPane, "Please select both size and difficulty before generating!");

@@ -13,7 +13,7 @@ public class Main {
         MatrixGenerator mg = new MatrixGenerator();
         //mg.createFromFile(f);
         long startTime = System.currentTimeMillis();
-        mg.createNew(3);
+        mg.createNew(3, 2);
         long endTime = System.currentTimeMillis();
         System.out.println("That took " + (endTime - startTime) + " milliseconds");
 

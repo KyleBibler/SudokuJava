@@ -7,7 +7,6 @@ import java.util.*;
  */
 public class MatrixGenerator {
 
-    public HashMap<String, ArrayList<String>> matrix;
     public int dim = 1;
     public ArrayList<String> originalCells;
     public Head head;
@@ -33,47 +32,50 @@ public class MatrixGenerator {
         this.generating = false;
         seedData = parseInput(f);
         setUp(seedData);
-        for(ArrayList<String> set : solve(0)) {
-            if(set == null) {
-                System.out.println("Puzzle was invalid");
-                break;
+        ArrayList<ArrayList<String>> sets = solve(0);
+        if(sets != null) {
+            for (ArrayList<String> set : sets) {
+                if (set == null) {
+                    continue;
+                }
+                finalBoard = boardToString(buildFinished(set));
             }
-            finalBoard = boardToString(buildFinished(set));
-            System.out.println(finalBoard);
         }
         return finalBoard;
     }
 
-    public void createNew(int n) {
+    public Tuple<String, String> createNew(int n, int difficulty) {
         this.generating = true;
         this.originalCells = new ArrayList<String>();
         int[][] seedData;
         this.dim = n;
+
         SudokuGenerator sg = new SudokuGenerator();
-        seedData = sg.generate(n);
+        seedData = sg.generateSeedData(n);
         setUp(seedData);
+
+        //Get the fully solved puzzle from the seed
         ArrayList<String> solvedPuzzle = solve(1).get(0);
-        int[][] finishedSet = convertSet(buildFinished(solvedPuzzle));
-        int[][] finalPuzzle = sg.createFinalPuzzle(finishedSet);
-        MatrixGenerator mg = new MatrixGenerator();
-        mg.createFromGiven(finalPuzzle);
+        int[][] solvedSet = convertSet(buildFinished(solvedPuzzle));
+        String solvedBoard = boardToString(solvedSet);
+
+        int[][] finalPuzzle = sg.createFinalPuzzle(solvedSet, difficulty);
         String finalBoard = boardToString(finalPuzzle);
-        System.out.println(finalBoard);
+        return new Tuple<String, String> (finalBoard, solvedBoard);
     }
 
-    public void createFromGiven(int[][] puzzle) {
+    public String createFromGiven(int[][] puzzle) {
+        String result = "Puzzle was invalid";
         this.generating = false;
         this.dim = (int) Math.sqrt(puzzle.length);
         this.originalCells = new ArrayList<String>();
         setUp(puzzle);
-        for(ArrayList<String> set : solve(1)) {
-            if(set == null) {
-                System.out.println("Puzzle was invalid");
-                break;
-            }
-            String finalBoard = boardToString(buildFinished(set));
-            System.out.println(finalBoard);
+        ArrayList<ArrayList<String>> sets = solve(1);
+        if(sets != null) {
+            result = boardToString(buildFinished(sets.get(0)));
         }
+        return result;
+
     }
 
     public void setUp(int[][] seedData) {
@@ -96,7 +98,7 @@ public class MatrixGenerator {
     }
 
     public ArrayList<ArrayList<String>> solve(int max_sols) {
-        if(max_sols == 0) {
+        if(max_sols <= 0) {
             max_sols = 100;
         }
         DancingLinks dl = new DancingLinks(head, dim, generating, max_sols);
@@ -107,7 +109,6 @@ public class MatrixGenerator {
             return null;
         }
     }
-
 
     public int[][] convertSet(ArrayList<String> solution) {
         int[][] result = new int[PUZZLE_SIDE][PUZZLE_SIDE];
@@ -132,10 +133,6 @@ public class MatrixGenerator {
             row = fs1.nextLine().trim();
             String[] boxes = row.split("   ");
             dim = boxes.length;
-//            PUZZLE_SIDE = dim*dim;
-//            SQUARE_SIDE = dim;
-//            PUZZLE_SIZE = PUZZLE_SIDE*PUZZLE_SIDE;
-//            COLUMN_SIZE = 4*PUZZLE_SIZE;
 
             int[][] result = new int[dim*dim][dim*dim];
 

@@ -16,7 +16,7 @@ public class Generator {
 
     /**
      * Default constructor for the Generator class setting the level of the 
-     * game to 1, each constructor generate a new board.
+     * game to 1, each constructor generateSeedData a new board.
      */
     public Generator(){
         newBoard();

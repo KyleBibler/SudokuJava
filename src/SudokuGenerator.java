@@ -6,7 +6,7 @@ import java.util.Random;
  */
 public class SudokuGenerator {
 
-    public int[][] generate(int n) {
+    public int[][] generateSeedData(int n) {
         int n2 = n*n;
         int[][] result = new int[n2][n2];
         ArrayList<Integer> avail = new ArrayList<Integer>();
@@ -22,13 +22,16 @@ public class SudokuGenerator {
         return result;
     }
 
-    public int[][] createFinalPuzzle(int[][] fp) {
+    public int[][] createFinalPuzzle(int[][] fp, int difficulty) {
+        if(difficulty > 2 || difficulty < 0) {
+            difficulty = 0;
+        }
         Random rand = new Random();
         ArrayList<Tuple<Integer, Integer>> indeces = new ArrayList<Tuple<Integer, Integer>>();
         int n = fp.length;
         int x, y;
         //int max = n*n*3/5 + rand.nextInt(n/5);
-        int max = n*n/2;
+        int max = n*n/(4-difficulty)+n*difficulty;
         for(int i = 0; i < max; i++) {
             Tuple<Integer, Integer> t;
             do {
