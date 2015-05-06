@@ -202,7 +202,7 @@ public class SamuraiGenerator {
         }
     }
 
-    private int[][] parseInput(File f) {
+    public int[][] parseInput(File f) {
         int[][] puzzle = new int[1][1];
         try {
             Scanner fs1 = new Scanner(f);
