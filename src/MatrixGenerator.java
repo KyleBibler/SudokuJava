@@ -25,7 +25,8 @@ public class MatrixGenerator {
             "U", "V", "W", "X", "Y", "Z", "!", "@", "#", "$",
             "%", "&", "?", "+", "=", "<", ">", "*", "~", "^"};
 
-    public void createFromFile(File f) {
+    public String createFromFile(File f) {
+        String finalBoard = "Puzzle was invalid";
         head = new Head(null, "HEAD");
         int[][] seedData;
         originalCells = new ArrayList<String>();
@@ -37,9 +38,10 @@ public class MatrixGenerator {
                 System.out.println("Puzzle was invalid");
                 break;
             }
-            String finalBoard = boardToString(buildFinished(set));
+            finalBoard = boardToString(buildFinished(set));
             System.out.println(finalBoard);
         }
+        return finalBoard;
     }
 
     public void createNew(int n) {
