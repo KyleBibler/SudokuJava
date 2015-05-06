@@ -199,14 +199,11 @@ public class SamuraiGenerator {
         else {
             for(ArrayList<String> set : sets) {
                 finalBoard = boardToString(buildFinished(set));
+                System.out.println(finalBoard);
             }
             //Do something with sets.get(0);
         }
         return "SUCCESS";
-    }
-
-    public String boardToString(int[][] finishedCells) {
-        return "";
     }
 
     public int[][] buildFinished(ArrayList<String> solved) {
