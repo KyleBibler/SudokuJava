@@ -32,8 +32,7 @@ public class Node {
         Node n = this;
 
         // Cover this node's column and move on to the next right.
-        do
-        {
+        do {
             n.col.cover();
             n = n.right;
         } while (n != this);

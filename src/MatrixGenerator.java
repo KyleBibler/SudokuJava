@@ -8,60 +8,117 @@ import java.util.*;
 public class MatrixGenerator {
 
     public HashMap<String, ArrayList<String>> matrix;
-    public int dim;
+    public int dim = 1;
     public ArrayList<String> originalCells;
     public Head head;
+    public boolean generating;
 
     public static int PUZZLE_SIDE;
     public static int SQUARE_SIDE;
     public static int PUZZLE_SIZE;
     public static int COLUMN_SIZE;
 
-    public MatrixGenerator(File f) {
+    public final String[] alphabet = {
+            "0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
+            "A", "B", "C", "D", "E", "F", "G", "H", "I", "J",
+            "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T",
+            "U", "V", "W", "X", "Y", "Z", "!", "@", "#", "$",
+            "%", "&", "?", "+", "=", "<", ">", "*", "~", "^"};
+
+    public void createFromFile(File f) {
         head = new Head(null, "HEAD");
-        this.dim = 1;
+        int[][] seedData;
         originalCells = new ArrayList<String>();
+        this.generating = false;
+        seedData = parseInput(f);
+        setUp(seedData);
+        for(ArrayList<String> set : solve(0)) {
+            if(set == null) {
+                System.out.println("Puzzle was invalid");
+                break;
+            }
+            String finalBoard = boardToString(buildFinished(set));
+            System.out.println(finalBoard);
+        }
+    }
 
-        int[][] seedData = parseInput(f);
+    public void createNew(int n) {
+        this.generating = true;
+        this.originalCells = new ArrayList<String>();
+        int[][] seedData;
+        this.dim = n;
+        SudokuGenerator sg = new SudokuGenerator();
+        seedData = sg.generate(n);
+        setUp(seedData);
+        ArrayList<String> solvedPuzzle = solve(1).get(0);
+        int[][] finishedSet = convertSet(buildFinished(solvedPuzzle));
+        int[][] finalPuzzle = sg.createFinalPuzzle(finishedSet);
+        MatrixGenerator mg = new MatrixGenerator();
+        mg.createFromGiven(finalPuzzle);
+        String finalBoard = boardToString(finalPuzzle);
+        System.out.println(finalBoard);
+    }
+
+    public void createFromGiven(int[][] puzzle) {
+        this.generating = false;
+        this.dim = (int) Math.sqrt(puzzle.length);
+        this.originalCells = new ArrayList<String>();
+        setUp(puzzle);
+        for(ArrayList<String> set : solve(1)) {
+            if(set == null) {
+                System.out.println("Puzzle was invalid");
+                break;
+            }
+            String finalBoard = boardToString(buildFinished(set));
+            System.out.println(finalBoard);
+        }
+    }
+
+    public void setUp(int[][] seedData) {
+        addSeedData(seedData);
+        PUZZLE_SIDE = dim*dim;
+        SQUARE_SIDE = dim;
+        PUZZLE_SIZE = PUZZLE_SIDE*PUZZLE_SIDE;
+        COLUMN_SIZE = 4*PUZZLE_SIZE;
         createMatrix(seedData);
+    }
 
-//        int nSq = (int) Math.pow(dim, 2);
-//        int nFr = (int) Math.pow(dim, 4);
-//        matrix = new HashMap<String, ArrayList<String>>();
-//
-//        for(int r = 1; r <= nSq; r++) {
-//            for(int c = 1; c <= nSq; c++) {
-//                for(int e = 1; e <= nSq; e++) {
-//                    String[] row = new String[4*nFr];
-//                    Arrays.fill(row, "");
-//                    int index;
-//                    int box;
-//
-//                    //RC constraint
-//                    index = nSq*(r-1)+c-1;
-//                    row[index] = "R" + r + "C" + c;
-//
-//                    //RN constraint
-//                    index = nFr + nSq*(r-1)+e-1;
-//                    row[index] = "R" + r + "#" + e;
-//
-//                    //CN constraint
-//                    index = 2*nFr + nSq*(c-1)+e-1;
-//                    row[index] = "C" + c + "#" + e;
-//
-//                    //BN constraint
-//                    box = (int) (dim*Math.floor((double)(r-1)/dim) + Math.ceil((double)c/dim));
-//                    index = 3*nFr + (int)(box-1)*nSq + (e-1);
-//                    row[index] = "B" + box + "#" + e;
-//
-//                    //add to matrix
-//                    matrix.put("R" + r + "C" + c + "#" + e, new ArrayList<String>(Arrays.asList(row)));
-//
-//                }
-//            }
-//        }
-//        reduceMatrix(seedData);
-//        buildLinks();
+    public void addSeedData(int[][] seedData) {
+        for(int i = 0; i < seedData.length; i++) {
+            for(int j = 0; j < seedData.length; j++) {
+                if(seedData[i][j] != 0) {
+                    originalCells.add("R" + (i+1) + "C" + (j+1) + "#" + seedData[i][j]);
+                }
+            }
+        }
+    }
+
+    public ArrayList<ArrayList<String>> solve(int max_sols) {
+        if(max_sols == 0) {
+            max_sols = 100;
+        }
+        DancingLinks dl = new DancingLinks(head, dim, generating, max_sols);
+        dl.search(0);
+        if(dl.ableToSolve)
+            return dl.solutionSets;
+        else {
+            return null;
+        }
+    }
+
+
+    public int[][] convertSet(ArrayList<String> solution) {
+        int[][] result = new int[PUZZLE_SIDE][PUZZLE_SIDE];
+        int number;
+        int length = result.length;
+        for(int i = 0; i < length; i++) {
+            for(int j = 0; j < length; j++) {
+                String s = solution.get(i*length+j);
+                number = Integer.parseInt(s.substring(s.indexOf('#')+1).trim());
+                result[i][j] = number;
+            }
+        }
+        return result;
     }
 
     public int[][] parseInput(File f) {
@@ -73,12 +130,12 @@ public class MatrixGenerator {
             row = fs1.nextLine().trim();
             String[] boxes = row.split("   ");
             dim = boxes.length;
-            PUZZLE_SIDE = dim*dim;
-            SQUARE_SIDE = dim;
-            PUZZLE_SIZE = PUZZLE_SIDE*PUZZLE_SIDE;
-            COLUMN_SIZE = 4*PUZZLE_SIZE;
+//            PUZZLE_SIDE = dim*dim;
+//            SQUARE_SIDE = dim;
+//            PUZZLE_SIZE = PUZZLE_SIDE*PUZZLE_SIDE;
+//            COLUMN_SIZE = 4*PUZZLE_SIZE;
 
-            int[][] result = new int[PUZZLE_SIDE][PUZZLE_SIDE];
+            int[][] result = new int[dim*dim][dim*dim];
 
             Scanner fs = new Scanner(f);
             int rowNum = 0;
@@ -100,13 +157,6 @@ public class MatrixGenerator {
                 }
                 rowNum++;
             }
-            for(int i = 0; i < result.length; i++) {
-                for(int j = 0; j < result.length; j++) {
-                    if(result[i][j] != 0) {
-                        originalCells.add("R" + (i+1) + "C" + (j+1) + "#" + result[i][j]);
-                    }
-                }
-            }
             return result;
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -114,109 +164,62 @@ public class MatrixGenerator {
         return new int[1][1];
     }
 
-    public void buildLinks() {
-        Node headItr = head;
-        Node newHead;
-        int rowLength = 0;
-        for(String s : matrix.keySet()) {
-            rowLength = matrix.get(s).size();
-            break;
-        }
+    class SudokuComp implements Comparator<String> {
 
-        for(int i = 0; i < rowLength; i++) {
-            newHead = new Head(null, "C"+(i+1));
-            headItr.right = newHead;
-            newHead.left = headItr;
-            headItr = newHead;
-        }
-        headItr.right = this.head;
-        this.head.left = headItr;
-
-        headItr = this.head.right;
-
-        Node newNode;
-        ArrayList<ArrayList<Node>> colNodes = new ArrayList<ArrayList<Node>>();
-        Node firstRowNode = null;
-        Node nodeItr = null;
-        int nodesInRow = 0;
-        ArrayList<String> currentRow;
-        for(String key : matrix.keySet()) {
-            currentRow = matrix.get(key);
-            for(int j = 0; j < currentRow.size(); j++) {
-                if(!currentRow.get(j).equals("")) {
-                    newNode = new Node((Head) headItr, key);
-                    if(j >= colNodes.size()) {
-                        for(int n = colNodes.size(); n <= j; n++) {
-                            colNodes.add(new ArrayList<Node>());
-                        }
-                    }
-                    if(nodesInRow == 0) {
-                        firstRowNode = newNode;
-                    } else {
-                        newNode.left = nodeItr;
-                        nodeItr.right = newNode;
-                    }
-                    nodeItr = newNode;
-                    colNodes.get(j).add(newNode);
-                    nodesInRow++;
-                }
-                headItr = headItr.right;
-            }
-            if(nodesInRow > 0) {
-                nodeItr.right = firstRowNode;
-                firstRowNode.left = nodeItr;
-            }
-            nodesInRow = 0;
-            headItr = this.head.right;
-        }
-
-        Head colHead = this.head;
-        Node nextNode;
-        ArrayList<Node> current;
-        for(int i = 0; i < colNodes.size(); i++) {
-            colHead = (Head) colHead.right;
-            nodeItr = colHead;
-            current = colNodes.get(i);
-            if(current.size() != 0) {
-                for(int j = 0; j < current.size(); j++) {
-                    nextNode = current.get(j);
-                    nextNode.up = nodeItr;
-                    nodeItr.down = nextNode;
-                    nodeItr = nextNode;
-                    colHead.size++;
-                }
-                colHead.up = nodeItr;
-                nodeItr.down = colHead;
+        @Override
+        public int compare(String s1, String s2) {
+            int row1 = Integer.parseInt(s1.substring(1, s1.indexOf('C')).trim());
+            int col1 = Integer.parseInt(s1.substring(s1.indexOf('C')+1, s1.indexOf('#')).trim());
+            int num1 = Integer.parseInt(s1.substring(s1.indexOf('#') + 1).trim());
+            int row2 = Integer.parseInt(s2.substring(1, s2.indexOf('C')).trim());
+            int col2 = Integer.parseInt(s2.substring(s2.indexOf('C')+1, s2.indexOf('#')).trim());
+            int num2 = Integer.parseInt(s2.substring(s2.indexOf('#')+1).trim());
+            if(row1 != row2) {
+                return row1 - row2;
+            } else if(col1 != col2) {
+                return col1 - col2;
             } else {
-                colHead.detach();
+                return num1 - num2;
             }
-        }
-
-        colHead = (Head) this.head.right;
-        int i = 1;
-        while(colHead != this.head) {
-            if(colHead.size == 0) {
-                colHead.detach();
-            } else {
-                colHead.col = i;
-                i++;
-            }
-            colHead = (Head) colHead.right;
         }
     }
 
-    public String buildFinished(ArrayList<String> finishedCells) {
-        finishedCells.addAll(originalCells);
-        Collections.sort(finishedCells);
+    public String boardToString(int[][] finishedCells) {
+        String result = "";
+        int n = (int) Math.sqrt(finishedCells.length);
+        for(int row = 0; row < finishedCells.length; row++) {
+            for(int col = 0; col < finishedCells.length; col++) {
+                String num;
+                if(finishedCells[row][col] >= alphabet.length)
+                   num = "" + finishedCells[row][col];
+                else { num = alphabet[finishedCells[row][col]]; }
+                result += num;
+                if(col+1 == n*n) {
+                    result +="\n";
+                } else if((col + 1) % n == 0) {
+                    result += " \t";
+                } else {
+                    result += " ";
+                }
+            }
+            if((row+1) % n == 0) {
+                result += "\n";
+            }
+        }
+        return result;
+    }
+
+    public String boardToString(ArrayList<String> finishedCells) {
         String result = "";
         int row;
         int column;
-        String number;
+        int number;
         for(String s : finishedCells) {
             row = Integer.parseInt(s.substring(1, s.indexOf('C')).trim());
             column = Integer.parseInt(s.substring(s.indexOf('C')+1, s.indexOf('#')).trim());
-            number = s.substring(s.indexOf('#')+1).trim();
-            result += number;
+            number = Integer.parseInt(s.substring(s.indexOf('#')+1).trim());
+            if(number >= alphabet.length) { result += number; }
+            else {result += alphabet[number]; }
             if(column == dim*dim) {
                 result += "\n";
                 if(row % dim == 0) {
@@ -224,64 +227,23 @@ public class MatrixGenerator {
                 }
             }
             else if(column % dim == 0) {
-                result += "   ";
+                result += " \t";
             } else {
                 result += " ";
             }
 
         }
-
-
         return result;
     }
 
-    public void reduceMatrix(ArrayList<String> seedData) {
-        ArrayList<String> constraintTags = new ArrayList<String>();
-        ArrayList<String> tagsToRemove = new ArrayList<String>();
-
-        String row;
-        String column;
-        String number;
-        String deleteTag;
-        int box;
-
-        for(String tag : seedData) {
-            row = tag.substring(1, tag.indexOf('C')).trim();
-            column = tag.substring(tag.indexOf('C')+1, tag.indexOf('#')).trim();
-            number = tag.substring(tag.indexOf('#')+1).trim();
-            box = (int) (dim*Math.floor((Integer.parseInt(row)-1)/(double)dim) + Math.ceil(Integer.parseInt(column) / (double) dim));
-            deleteTag = tag.substring(0, tag.indexOf('#')).trim();
-
-            for(int i = 1; i <= dim*dim; i++) {
-                tagsToRemove.add((deleteTag + "#" + i).trim());
-            }
-
-            constraintTags.add(("R" + row + "C" + column).trim());
-            constraintTags.add(("R" + row + "#" + number).trim());
-            constraintTags.add(("C" + column + "#" + number).trim());
-            constraintTags.add(("B" + box + "#" + number).trim());
-        }
-
-        for(String tag : tagsToRemove) {
-            if(matrix.containsKey(tag))
-                matrix.remove(tag);
-        }
-
-        ArrayList<String> rowArray;
-        for(String key : matrix.keySet()) {
-            rowArray = matrix.get(key);
-            for(int i = 0; i < rowArray.size(); i++) {
-                for (String tag : constraintTags) {
-                    if(tag.trim().equals(rowArray.get(i).trim())) {
-                        rowArray.set(i, "");
-                    }
-                }
-            }
-        }
+    public ArrayList<String> buildFinished(ArrayList<String> finishedCells) {
+        finishedCells.addAll(originalCells);
+        Collections.sort(finishedCells, new SudokuComp());
+        //System.out.println(boardToString(finishedCells));
+        return finishedCells;
     }
 
     public Node[] createMatrix(int[][] seedData) {
-        Node[] o = new Node[PUZZLE_SIZE];
         head = new Head(null, "HEAD");
         Head[] m = new Head[COLUMN_SIZE];
         int index = 0;
@@ -322,9 +284,22 @@ public class MatrixGenerator {
                     // If this row is in the puzzle, add it to the
                     // list.
 
-                    if (seedData[c][r] == (d + 1))
+                    if (seedData[r][c] == (d + 1))
                         l[i++] = n;
                 }
+
+        Node[] o = new Node[PUZZLE_SIZE];
+
+        for(Head h = (Head)this.head.right; h != this.head; h = (Head)h.right) {
+            int size = 0;
+            for (Node n = h.down; n != h; n = n.down) {
+                size++;
+            }
+            if (size != h.size){
+                System.out.println(h.row + " size is wrong");
+                System.out.println("expected " + size + " and got " + h.size);
+            }
+        }
 
         // Remove the rows in the list and add them to the output.
 

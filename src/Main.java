@@ -8,18 +8,22 @@ import java.util.HashMap;
 public class Main {
 
     public static void main(String[] args) {
-        File f = new File("easySudoku.txt");
-        MatrixGenerator mg = new MatrixGenerator(f);
-        DancingLinks dl = new DancingLinks(mg.head, mg.dim);
-        long startTime = System.currentTimeMillis();
-        dl.search(0);
-        long endTime   = System.currentTimeMillis();
-        long totalTime = endTime - startTime;
-        System.out.println(totalTime/1000);
+        File f = new File("sudoku.txt");
 
-        for (ArrayList<String> set : dl.solutionSets) {
-            System.out.println(mg.buildFinished(set));
-        }
+        MatrixGenerator mg = new MatrixGenerator();
+        //mg.createFromFile(f);
+        long startTime = System.currentTimeMillis();
+        mg.createNew(6);
+        long endTime = System.currentTimeMillis();
+        System.out.println("That took " + (endTime - startTime) + " milliseconds");
+
+//        if (!generating){
+//            for (ArrayList<String> set : dl.solutionSets) {
+//                System.out.println(mg.buildFinished(set));
+//            }
+//        } else {
+//            new SudokuGenerator().createFinalPuzzle(dl.solutionSets.get(0));
+//        }
 
 //        Generator g = new Generator(5);
 //        System.out.println(g.toString());

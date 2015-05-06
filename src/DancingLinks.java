@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Created by Kyle on 4/30/2015.
@@ -7,32 +6,52 @@ import java.util.HashMap;
 public class DancingLinks {
     public ArrayList<ArrayList<String>> solutionSets;
     public String[] solutionSet;
-    public boolean stop;
+    public int stopCount;
+    public int MAX_COUNT;
     public Head head;
+    public int DIM;
+    public int DIM4;
+    public boolean generating;
+    public boolean ableToSolve;
 
-    public DancingLinks(Head head, int dim) {
+    public DancingLinks(Head head, int dim, boolean generating, int max_sols) {
         this.solutionSets = new ArrayList<ArrayList<String>>();
-        solutionSet = new String[dim*dim*dim*dim];
+        this.ableToSolve = false;
+        this.DIM = dim;
+        this.DIM4 = (int) Math.pow(DIM, 4);
+        this.generating = generating;
+        if(generating) {
+            MAX_COUNT = 1;
+        } else {
+            MAX_COUNT = max_sols;
+        }
+        solutionSet = new String[DIM4];
         for(int i = 0; i < solutionSet.length; i++) {
             solutionSet[i] = "";
         }
         this.head = head;
-        this.stop = false;
+        this.stopCount = 0;
     }
 
     public void search(int depth) {
-        if(stop) {
+        if(depth >= DIM4 && !generating) {
+            System.out.println("PUZZLE IS INVALID");
+            stopCount = MAX_COUNT;
+        }
+        if(stopCount == MAX_COUNT) {
             return;
         }
 
         if(head.right == head) {
             ArrayList<String> mySolution = new ArrayList<String>();
-            for(String s : solutionSet) {
+            for (int i = 0; i < depth; i++) {
+                String s = solutionSet[i];
                 if(!s.equals(""))
-                mySolution.add(s);
+                    mySolution.add(s);
             }
+            this.ableToSolve = true;
             this.solutionSets.add(mySolution);
-            this.stop = true;
+            this.stopCount++;
             return;
         }
 
@@ -49,7 +68,7 @@ public class DancingLinks {
         col.cover();
         Node rn;
         for(Node rowNode = col.down; rowNode != col; rowNode = rowNode.down) {
-            if(stop) {
+            if(stopCount == MAX_COUNT) {
                 break;
             }
             solutionSet[depth] = rowNode.row;
