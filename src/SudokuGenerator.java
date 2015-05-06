@@ -32,6 +32,9 @@ public class SudokuGenerator {
         int x, y;
         //int max = n*n*3/5 + rand.nextInt(n/5);
         int max = n*n/(4-difficulty)+n*difficulty;
+        if(n == 4 && difficulty == 2) {
+            max -= 4;
+        }
         for(int i = 0; i < max; i++) {
             Tuple<Integer, Integer> t;
             do {
