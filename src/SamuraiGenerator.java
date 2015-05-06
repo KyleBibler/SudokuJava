@@ -1,6 +1,7 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Scanner;
 
 /**
@@ -180,19 +181,43 @@ public class SamuraiGenerator {
 
     public String createFromFile(File f) {
         int[][] puzzle = parseInput(f);
+        String finalBoard = "";
         if (dim == 1) {
             //THIS PUZZLE FILE WAS NOT CORRECT SYNTAX
             return "File is incorrect";
         }
 
         initializeVars();
+        //Store the seed data;
         addSeedData(puzzle);
         //Create the matrix from the seed data
         createMatrix(puzzle);
+        ArrayList<ArrayList<String>> sets = solve(1);
+        if(sets == null) {
+            return "Puzzle was invalid";
+        }
+        else {
+            for(ArrayList<String> set : sets) {
+                finalBoard = boardToString(buildFinished(set));
+            }
+            //Do something with sets.get(0);
+        }
         return "SUCCESS";
     }
 
+    public String boardToString(int[][] finishedCells) {
+        return "";
+    }
+
+    public int[][] buildFinished(ArrayList<String> solved) {
+        solved.addAll(originalCells);
+        Collections.sort(solved, new SudokuComp());
+        int[][] result = convertSet(solved);
+        return result;
+    }
+
     private void addSeedData(int[][] seedData) {
+        originalCells = new ArrayList<String>();
         for (int i = 0; i < seedData.length; i++) {
             for (int j = 0; j < seedData.length; j++) {
                 if (seedData[i][j] != 0) {
