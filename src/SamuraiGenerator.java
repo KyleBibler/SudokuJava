@@ -187,7 +187,7 @@ public class SamuraiGenerator {
 
     public String createFromFile(File f) {
         int[][] puzzle = parseInput(f);
-        String finalBoard;
+        String finalBoard = "Puzzle was invalid.";
         if (dim == 1) {
             //THIS PUZZLE FILE WAS NOT CORRECT SYNTAX
             return "File is incorrect";
@@ -209,7 +209,7 @@ public class SamuraiGenerator {
             }
             //Do something with sets.get(0);
         }
-        return "SUCCESS";
+        return finalBoard;
     }
 
     public int[][] buildFinished(ArrayList<String> solved) {
@@ -467,5 +467,21 @@ public class SamuraiGenerator {
 
         String result = sg.boardToString(puzzle1);
         System.out.println(result);
+    }
+
+    public String displayFile(File f) {
+        int[][] puzzle = parseInput(f);
+        String finalBoard;
+        if (dim == 1) {
+            //THIS PUZZLE FILE WAS NOT CORRECT SYNTAX
+            return "File is incorrect";
+        }
+
+        initializeVars();
+        //Store the seed data;
+        addSeedData(puzzle);
+        //Create the matrix from the seed data
+        createMatrix(puzzle);
+        return boardToString(puzzle);
     }
 }

@@ -129,6 +129,9 @@ public class GUI extends javax.swing.JFrame {
         buttonGroup2.add(n5);
         n5.setText("25 x 25");
 
+        buttonGroup2.add(n6);
+        n6.setText("36 x 36");
+
         Size.setText("Size");
 
         Diff.setText("Difficulty");
@@ -346,18 +349,31 @@ public class GUI extends javax.swing.JFrame {
 
     private void importPuzzleActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
+        if (!Classic.isSelected() && !Samurai.isSelected()) {
+            JOptionPane.showMessageDialog(rootPane, "Please select a puzzle type!");
+            return;
+        }
+
         int returnVal = fileChooser.showOpenDialog(this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             file = fileChooser.getSelectedFile();
             try {
                 // What to do with the file, e.g. display it in a TextArea
-                textArea1.read( new FileReader( file.getAbsolutePath() ), null );
-                isImport = true;
+                if (Classic.isSelected()) {
+                    textArea1.read(new FileReader(file.getAbsolutePath()), null);
+                    isImport = true;
+                } else if (Samurai.isSelected()) {
+                    SamuraiGenerator sg = new SamuraiGenerator();
+                    textArea1.setText(sg.displayFile(file));
+                    isImport = true;
+                } else {
+                    JOptionPane.showMessageDialog(rootPane, "Please select a puzzle type!");
+                }
             } catch (IOException ex) {
-                System.out.println("problem accessing file"+file.getAbsolutePath());
+                JOptionPane.showMessageDialog(rootPane, "Problem accessing file: " + file.getAbsolutePath());
             }
         } else {
-            System.out.println("File access cancelled by user.");
+            JOptionPane.showMessageDialog(rootPane, "File access cancelled by user.");
         }
     }
 
@@ -382,14 +398,21 @@ public class GUI extends javax.swing.JFrame {
         }
 
         // check if import == true
-        if (isImport == false){
+        if (!isImport){
             JOptionPane.showMessageDialog(rootPane, "Please import a sudoku file before solving!");
         }
 
-        if(type > 0 && isImport == true){
+        if(type > 0 && isImport){
+            String finalBoard = "";
             // KYLE
-            MatrixGenerator mg = new MatrixGenerator();
-            String finalBoard = mg.createFromFile(file);
+            if (type == 1) {
+                MatrixGenerator mg = new MatrixGenerator();
+                finalBoard = mg.createFromFile(file);
+                textArea2.setText(finalBoard);
+            } else if (type == 2) {
+                SamuraiGenerator sg = new SamuraiGenerator();
+                finalBoard = sg.createFromFile(file);
+            }
             textArea2.setText(finalBoard);
         }
     }
