@@ -347,7 +347,7 @@ public class GUI extends javax.swing.JFrame {
         // TODO add your handling code here:
         int returnVal = fileChooser.showOpenDialog(this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
-            File file = fileChooser.getSelectedFile();
+            file = fileChooser.getSelectedFile();
             try {
                 // What to do with the file, e.g. display it in a TextArea
                 textArea1.read( new FileReader( file.getAbsolutePath() ), null );
