@@ -30,7 +30,6 @@ public class SudokuGenerator {
         ArrayList<Tuple<Integer, Integer>> indeces = new ArrayList<Tuple<Integer, Integer>>();
         int n = fp.length;
         int x, y;
-        //int max = n*n*3/5 + rand.nextInt(n/5);
         int max = n*n/(4-difficulty)+n*difficulty;
         if(n == 4 && difficulty == 2) {
             max -= 4;

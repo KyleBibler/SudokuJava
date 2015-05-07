@@ -53,16 +53,20 @@ public class SamuraiGenerator {
     private ArrayList<String> originalCells;
 
     public void initializeVars() {
-        PUZZLE_SIDE = 2*dim*dim + dim;
+        PUZZLE_SIDE = 3*dim*dim - 2*dim;
         PUZZLE_SIZE = PUZZLE_SIDE * PUZZLE_SIDE;
         SUDOKU_SIDE = dim * dim;
         SUDOKU_SIZE = SUDOKU_SIDE * SUDOKU_SIDE;
         SQUARE_SIDE = dim;
-        COLUMN_SIZE = 2 * PUZZLE_SIZE + SUDOKU_SIZE * 10;
+        //COLUMN_SIZE = 2 * PUZZLE_SIZE + SUDOKU_SIZE * 10;
         BOX_AMOUNT = dim * 3 - 2;
+        COLUMN_SIZE = PUZZLE_SIZE + 5*SUDOKU_SIZE + 5*SUDOKU_SIZE + BOX_AMOUNT * BOX_AMOUNT * SUDOKU_SIDE;
+
         PUZZLE_DIGITS = 5 * SUDOKU_SIZE;
 
+
         //INITIALIZE SAMURAI SQUARE
+        SAMURAI_SQUARE = new int[BOX_AMOUNT*BOX_AMOUNT][];
         for (int i = 0; i < BOX_AMOUNT; i++) {
             for (int j = 0; j < BOX_AMOUNT; j++) {
                 int[] box = new int[0];
@@ -372,6 +376,7 @@ public class SamuraiGenerator {
             l[j].remove();
             o[index++] = l[j];
         }
+
         return o;
     }
 

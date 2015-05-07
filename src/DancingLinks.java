@@ -34,10 +34,10 @@ public class DancingLinks {
     }
 
     public void search(int depth) {
-        if(depth >= SOLUTION_SIZE && !generating) {
-            System.out.println("PUZZLE IS INVALID");
-            stopCount = MAX_COUNT;
-        }
+//        if(depth >= SOLUTION_SIZE && !generating) {
+//            System.out.println("PUZZLE IS INVALID");
+//            stopCount = MAX_COUNT;
+//        }
         if(stopCount == MAX_COUNT) {
             return;
         }
