@@ -141,7 +141,7 @@ public class MatrixGenerator {
 
 
             row = fs1.nextLine().trim();
-            String[] boxes = row.split("   ");
+            String[] boxes = row.split("\t");
             dim = boxes.length;
 
             int[][] result = new int[dim*dim][dim*dim];
@@ -153,13 +153,14 @@ public class MatrixGenerator {
                 if(row.isEmpty()) {
                     continue;
                 }
-                boxes = row.split("   ");
+                boxes = row.split("\t");
                 int col = 0;
                 for (int j = 0; j < boxes.length; j++) {
                     String[] numbers = boxes[j].trim().split(" ");
                     for (int n = 0; n < numbers.length; n++) {
                         if (!numbers[n].equals("0")) {
-                            result[rowNum][col] = Integer.parseInt(numbers[n]);
+                            //result[rowNum][col] = Integer.parseInt(numbers[n]);
+                            result[rowNum][col] = Arrays.asList(alphabet).indexOf(numbers[n]);
                         }
                         col++;
                     }
@@ -239,28 +240,21 @@ public class MatrixGenerator {
         Head[] m = new Head[COLUMN_SIZE];
         int index = 0;
 
-        // Create the row of columns.
 
         for (int i = 0; i < COLUMN_SIZE; i++)
             m[i] = new Head(head, "C"+(i+1));
 
-        // List of rows that are part of the solution.
 
         Node[] l = new Node[PUZZLE_SIZE];
         int i = 0;
 
-        // For each row, column and possible digit.
 
         for (int r = 0; r < PUZZLE_SIDE; r++)
             for (int c = 0; c < PUZZLE_SIDE; c++)
                 for (int d = 0; d < PUZZLE_SIDE; d++)
                 {
-                    // Calculate row number.
 
                     String k = "R" + (r+1) + "C" + (c+1) + "#" + (d+1);
-                    //int k = 1 + (r * PUZZLE_SIZE) + (c * PUZZLE_SIDE) + d;
-
-                    // Create the row of nodes.
 
                     Node n = new Node(m[(r * PUZZLE_SIDE) + c], k);
                     n.add(new Node(m[(PUZZLE_SIZE * 1) +
@@ -272,8 +266,6 @@ public class MatrixGenerator {
                                     (c / SQUARE_SIDE)) * PUZZLE_SIDE) +
                             d], k));
 
-                    // If this row is in the puzzle, add it to the
-                    // list.
 
                     if (seedData[r][c] == (d + 1))
                         l[i++] = n;

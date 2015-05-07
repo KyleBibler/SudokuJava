@@ -198,16 +198,14 @@ public class SamuraiGenerator {
         addSeedData(puzzle);
         //Create the matrix from the seed data
         createMatrix(puzzle);
-        ArrayList<ArrayList<String>> sets = solve(1);
+        ArrayList<ArrayList<String>> sets = solve(0);
         if(sets == null) {
             return "Puzzle was invalid";
         }
         else {
             for(ArrayList<String> set : sets) {
                 finalBoard = boardToString(buildFinished(set));
-                System.out.println(finalBoard);
             }
-            //Do something with sets.get(0);
         }
         return finalBoard;
     }
@@ -282,74 +280,49 @@ public class SamuraiGenerator {
         Node[] o;
         int index = 0;
 
-        // Create the row of columns.
+
 
         for (int i = 0; i < COLUMN_SIZE; i++)
             m[i] = new Head(head, "C" + (i + 1));
 
-        // List of rows that are part of the solution.
 
         Node[] l = new Node[PUZZLE_SIZE];
         int i = 0;
 
-        // For each samurai (big) row, column and possible digit.
-
         for (int r = 0; r < PUZZLE_SIDE; r++)
             for (int c = 0; c < PUZZLE_SIDE; c++)
                 for (int d = 0; d < SUDOKU_SIDE; d++) {
-                    // Calculate row number for possible
-                    // move in samurai (big) puzzle.
-
                     String k = "R" + (r + 1) + "C" + (c + 1) + "#" + (d + 1);
-                    //int k = 1 + (r * PUZZLE_SIDE * SUDOKU_SIDE) + (c * SUDOKU_SIDE) + d;
-
-                    // See what samurai (big) square we're in.
 
                     int s = (c / SQUARE_SIDE) + ((r / SQUARE_SIDE) * BOX_AMOUNT);
 
-                    // If the slot is in a puzzle create a row of
-                    // nodes.
-
                     if (SAMURAI_SQUARE[s].length > 0) {
-                        // Create a node for the slot.
+
 
                         Node n = new Node(m[(r * PUZZLE_SIDE) + c], k);
 
-                        // For each puzzle that this slot is in...
+
 
                         for (int j = 0; j < SAMURAI_SQUARE[s].length; j++) {
-                            // Find which puzzle the slot is in.
+
 
                             int pz = SAMURAI_SQUARE[s][j];
-
-                            // Find the puzzle row and column.
-
                             int pr = SUDOKU_ROW[pz][r];
                             int pc = SUDOKU_COLUMN[pz][c];
-
-                            // Add a node for the puzzle, row and
-                            // digit.
 
                             n.add(new Node(m[PUZZLE_SIZE +
                                     (pz * SUDOKU_SIZE) +
                                     (pr * SUDOKU_SIDE) + d], k));
-
-                            // Add a node for the puzzle, column
-                            // and digit.
 
                             n.add(new Node(m[PUZZLE_SIZE + PUZZLE_DIGITS +
                                     (pz * SUDOKU_SIZE) +
                                     (pc * SUDOKU_SIDE) + d], k));
                         }
 
-                        // Add a node for the samurai (big) square
-                        // and digit.
 
                         n.add(new Node(m[PUZZLE_SIZE + PUZZLE_DIGITS + PUZZLE_DIGITS +
                                 (s * SUDOKU_SIDE) + d], k));
 
-                        // If this row is in the puzzle, add it to the
-                        // list.
 
 
                         //ROW COLUMN NOT COLUMN ROW
@@ -358,20 +331,13 @@ public class SamuraiGenerator {
                     }
                 }
 
-        // There will be empty columns corresponding to the unused
-        // slots in the samurai (big) puzzle. Remove the empty
-        // columns.
 
         for (Head c = (Head) head.right; c != head; c = (Head) c.right)
             if (c.size == 0)
                 c.cover();
 
-        // Create an array for the output.
 
         o = new Node[PUZZLE_SIZE];
-
-        // Remove the rows in the list and add them to the output.
-
         for (int j = 0; j < i; j++) {
             l[j].remove();
             o[index++] = l[j];
