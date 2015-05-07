@@ -34,7 +34,7 @@ public class MatrixGenerator {
         setUp(seedData);
         ArrayList<ArrayList<String>> sets = solve(0);
         if(sets != null) {
-            int i = 0;
+            int i = 1;
             for (ArrayList<String> set : sets) {
                 if (set == null) {
                     continue;
@@ -45,7 +45,7 @@ public class MatrixGenerator {
                     }
                     finalBoard += "\n";
                 }
-                finalBoard += "Solution: " + i;
+                finalBoard += "Solution: " + i + "\n";
                 finalBoard += boardToString(buildFinished(set));
                 i++;
             }
