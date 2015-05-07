@@ -4,6 +4,7 @@ import java.util.ArrayList;
  * Created by Kyle on 4/30/2015.
  */
 public class DancingLinks {
+    public int SOLUTION_SIZE;
     public ArrayList<ArrayList<String>> solutionSets;
     public String[] solutionSet;
     public int stopCount;
@@ -14,18 +15,17 @@ public class DancingLinks {
     public boolean generating;
     public boolean ableToSolve;
 
-    public DancingLinks(Head head, int dim, boolean generating, int max_sols) {
+    public DancingLinks(Head head, int solutionSize, boolean generating, int max_sols) {
         this.solutionSets = new ArrayList<ArrayList<String>>();
         this.ableToSolve = false;
-        this.DIM = dim;
-        this.DIM4 = (int) Math.pow(DIM, 4);
+        this.SOLUTION_SIZE = solutionSize;
         this.generating = generating;
         if(generating) {
             MAX_COUNT = 1;
         } else {
             MAX_COUNT = max_sols;
         }
-        solutionSet = new String[DIM4];
+        solutionSet = new String[SOLUTION_SIZE];
         for(int i = 0; i < solutionSet.length; i++) {
             solutionSet[i] = "";
         }
@@ -34,7 +34,7 @@ public class DancingLinks {
     }
 
     public void search(int depth) {
-        if(depth >= DIM4 && !generating) {
+        if(depth >= SOLUTION_SIZE && !generating) {
             System.out.println("PUZZLE IS INVALID");
             stopCount = MAX_COUNT;
         }

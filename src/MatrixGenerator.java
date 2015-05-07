@@ -101,7 +101,8 @@ public class MatrixGenerator {
         if(max_sols <= 0) {
             max_sols = 100;
         }
-        DancingLinks dl = new DancingLinks(head, dim, generating, max_sols);
+        int solutionSize = (int) Math.pow(dim, 4);
+        DancingLinks dl = new DancingLinks(head, solutionSize, generating, max_sols);
         dl.search(0);
         if(dl.ableToSolve)
             return dl.solutionSets;

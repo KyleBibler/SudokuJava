@@ -8,7 +8,7 @@ import java.util.HashMap;
 public class Main {
 
     public static void main(String[] args) {
-        File f = new File("samurai.txt");
+        File f = new File("samuraiMini.txt");
 
         //MatrixGenerator mg = new MatrixGenerator();
         //mg.createFromFile(f);

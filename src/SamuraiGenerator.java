@@ -14,7 +14,8 @@ public class SamuraiGenerator {
     public static int SUDOKU_SIZE = 81; //n^4
     public static int SQUARE_SIDE = 3; //n
     public static int COLUMN_SIZE = 1692;
-    public static int BOX_AMOUNT;
+    public static int BOX_AMOUNT = 7;
+    public static int PUZZLE_DIGITS = 405;
     public Head head;
 
     public final String[] alphabet = {
@@ -52,13 +53,14 @@ public class SamuraiGenerator {
     private ArrayList<String> originalCells;
 
     public void initializeVars() {
-        PUZZLE_SIDE = 2 * dim ^ 2 + dim;
+        PUZZLE_SIDE = 2*dim*dim + dim;
         PUZZLE_SIZE = PUZZLE_SIDE * PUZZLE_SIDE;
         SUDOKU_SIDE = dim * dim;
         SUDOKU_SIZE = SUDOKU_SIDE * SUDOKU_SIDE;
         SQUARE_SIDE = dim;
         COLUMN_SIZE = 2 * PUZZLE_SIZE + SUDOKU_SIZE * 10;
         BOX_AMOUNT = dim * 3 - 2;
+        PUZZLE_DIGITS = 5 * SUDOKU_SIZE;
 
         //INITIALIZE SAMURAI SQUARE
         for (int i = 0; i < BOX_AMOUNT; i++) {
@@ -123,18 +125,18 @@ public class SamuraiGenerator {
                         if (k < dim * dim - dim) {
                             row[k] = -1;
                         } else {
-                            row[k] = k - dim * dim - dim;
+                            row[k] = k - (dim * dim - dim);
                         }
                     }
                     break;
                 case 3:
                 case 4:
-                    row = new int[dim * dim + dim];
+                    row = new int[PUZZLE_SIDE];
                     for (int k = 0; k < row.length; k++) {
                         if (k < dim * dim + dim) {
                             row[k] = -1;
                         } else {
-                            row[k] = k - dim * dim + dim;
+                            row[k] = k - (dim * dim + dim);
                         }
                     }
                     break;
@@ -159,18 +161,18 @@ public class SamuraiGenerator {
                         if (k < dim * dim - dim) {
                             row[k] = -1;
                         } else {
-                            row[k] = k - dim * dim - dim;
+                            row[k] = k - (dim * dim - dim);
                         }
                     }
                     break;
                 case 1:
                 case 4:
-                    row = new int[dim * dim + dim];
+                    row = new int[PUZZLE_SIDE];
                     for (int k = 0; k < row.length; k++) {
                         if (k < dim * dim + dim) {
                             row[k] = -1;
                         } else {
-                            row[k] = k - dim * dim + dim;
+                            row[k] = k - (dim * dim + dim);
                         }
                     }
                     break;
@@ -181,7 +183,7 @@ public class SamuraiGenerator {
 
     public String createFromFile(File f) {
         int[][] puzzle = parseInput(f);
-        String finalBoard = "";
+        String finalBoard;
         if (dim == 1) {
             //THIS PUZZLE FILE WAS NOT CORRECT SYNTAX
             return "File is incorrect";
@@ -213,11 +215,17 @@ public class SamuraiGenerator {
         return result;
     }
 
+    public boolean isEmptySpace(int i, int j) {
+        boolean topBottom = ((i >= SUDOKU_SIDE && i < PUZZLE_SIDE - SUDOKU_SIDE) && (j < SUDOKU_SIDE-SQUARE_SIDE || j >= SUDOKU_SIDE+2*SQUARE_SIDE));//top and bottom
+        boolean leftRight = ((i < SUDOKU_SIDE-SQUARE_SIDE || i >= SUDOKU_SIDE+2*SQUARE_SIDE) && (j >= SUDOKU_SIDE && j < PUZZLE_SIDE - SUDOKU_SIDE));    //left
+        return (topBottom || leftRight);
+    }
+
     private void addSeedData(int[][] seedData) {
         originalCells = new ArrayList<String>();
         for (int i = 0; i < seedData.length; i++) {
             for (int j = 0; j < seedData.length; j++) {
-                if (seedData[i][j] != 0) {
+                if (seedData[i][j] != 0 || isEmptySpace(i, j)) {
                     originalCells.add("R" + (i + 1) + "C" + (j + 1) + "#" + seedData[i][j]);
                 }
             }
@@ -255,7 +263,7 @@ public class SamuraiGenerator {
         if(max_sols <= 0) {
             max_sols = 100;
         }
-        DancingLinks dl = new DancingLinks(head, dim, false, max_sols);
+        DancingLinks dl = new DancingLinks(head, PUZZLE_SIZE, true, max_sols);
         dl.search(0);
         if(dl.ableToSolve)
             return dl.solutionSets;
@@ -293,7 +301,7 @@ public class SamuraiGenerator {
 
                     // See what samurai (big) square we're in.
 
-                    int s = (c / 3) + ((r / 3) * 7);
+                    int s = (c / SQUARE_SIDE) + ((r / SQUARE_SIDE) * BOX_AMOUNT);
 
                     // If the slot is in a puzzle create a row of
                     // nodes.
@@ -325,7 +333,7 @@ public class SamuraiGenerator {
                             // Add a node for the puzzle, column
                             // and digit.
 
-                            n.add(new Node(m[PUZZLE_SIZE + 405 +
+                            n.add(new Node(m[PUZZLE_SIZE + PUZZLE_DIGITS +
                                     (pz * SUDOKU_SIZE) +
                                     (pc * SUDOKU_SIDE) + d], k));
                         }
@@ -333,7 +341,7 @@ public class SamuraiGenerator {
                         // Add a node for the samurai (big) square
                         // and digit.
 
-                        n.add(new Node(m[PUZZLE_SIZE + 405 + 405 +
+                        n.add(new Node(m[PUZZLE_SIZE + PUZZLE_DIGITS + PUZZLE_DIGITS +
                                 (s * SUDOKU_SIDE) + d], k));
 
                         // If this row is in the puzzle, add it to the
