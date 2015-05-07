@@ -50,6 +50,9 @@ public class MatrixGenerator {
                 i++;
             }
         }
+        else {
+            finalBoard = "Puzzle is invalid";
+        }
         return finalBoard;
     }
 
@@ -141,7 +144,7 @@ public class MatrixGenerator {
 
 
             row = fs1.nextLine().trim();
-            String[] boxes = row.split("\t");
+            String[] boxes = row.split("   ");
             dim = boxes.length;
 
             int[][] result = new int[dim*dim][dim*dim];
@@ -153,7 +156,7 @@ public class MatrixGenerator {
                 if(row.isEmpty()) {
                     continue;
                 }
-                boxes = row.split("\t");
+                boxes = row.split("   ");
                 int col = 0;
                 for (int j = 0; j < boxes.length; j++) {
                     String[] numbers = boxes[j].trim().split(" ");
